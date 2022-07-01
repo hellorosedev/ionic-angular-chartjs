@@ -1,3 +1,4 @@
+import { ControllerService } from './../shared/services/controller.service';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -21,7 +22,8 @@ export class CurrencyPage implements OnInit {
 
   constructor (
     private activateRoute: ActivatedRoute,
-    private currencySvc: CurrencyApiService
+    private currencySvc: CurrencyApiService,
+    private controllerSvc: ControllerService
   ) { }
 
   ngOnInit() {
@@ -33,14 +35,19 @@ export class CurrencyPage implements OnInit {
   }
 
   public getChangeDate() {
-    if (this.startDate > this.endDate) return;
+    if (this.startDate > this.endDate) {
+      return this.controllerSvc.presentAlert('Start date should NOT exceed with End date value');
+    }
     const changeStartDate = this.startDate;
     this.startDate = changeStartDate?.split('T')[0];
 
     const changeEndDate = this.endDate;
     this.endDate = changeEndDate?.split('T')[0];
 
-    if (!this.startDate || !this.endDate) return;
+    if (!this.startDate || !this.endDate) {
+
+      return this.controllerSvc.presentAlert('Enter correct Start and End Date value');
+    }
     this.isLoading = true;
     this.getCurrencyRangeValue();
   }
