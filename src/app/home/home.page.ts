@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { CurrencyApiService } from '../shared/services/currency-api.service';
-import { first, tap } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-export interface Latest {
+export interface LatestRates {
     success: boolean;
     timestamp: number;
     base: string;

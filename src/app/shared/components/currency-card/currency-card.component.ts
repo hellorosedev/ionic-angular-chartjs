@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CurrencyApiService } from '../../services/currency-api.service';
 import { StorageService } from '../../services/storage.service';
 

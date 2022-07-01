@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 @Component({
   selector: 'app-graph',
@@ -7,7 +7,7 @@ import { Chart, registerables } from 'chart.js';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GraphComponent {
-  @Input() rates: any;
+  @Input() rates!: any;
   @ViewChild('lineCanvas') private lineCanvas: ElementRef;
   lineChart: any;
 
@@ -19,15 +19,15 @@ export class GraphComponent {
     this.lineChartMethod();
   }
 
-  private getDate() {
+  private getDate(): any[] {
     return this.rates.map(item => item.date);
   }
 
-  private getRates() {
+  private getRates(): any[] {
     return this.rates.map(item => item.rate);
   }
 
-  private lineChartMethod() {
+  private lineChartMethod(): void {
     this.lineChart = new Chart(this.lineCanvas.nativeElement, {
       type: 'line',
       data: {

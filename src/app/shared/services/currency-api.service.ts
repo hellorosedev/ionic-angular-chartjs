@@ -1,9 +1,11 @@
+import { LatestRates, TimeSeries } from './../../model/timeseries.model';
 import { environment } from './../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of, Observable, throwError, BehaviorSubject, EMPTY, from, concat } from 'rxjs';
-import { tap, map, mergeMap, catchError, switchMap, concatMap } from 'rxjs/operators';
+import { of, Observable, throwError, BehaviorSubject, from, } from 'rxjs';
+import { tap, mergeMap, catchError, switchMap } from 'rxjs/operators';
 import { StorageService } from './storage.service';
+import { Keys } from 'src/app/shared/enum/keys';
 
 @Injectable({
   providedIn: 'root'
@@ -31,29 +33,36 @@ export class CurrencyApiService {
     private storageSvc: StorageService
   ) { }
 
-  public getBaseCompareLatest(baseName: string): Observable<any> {
-    this.url = environment.currencyAPI + `/latest?base=${baseName}`;
+  public getBaseCompareLatest(baseName: string): Observable<LatestRates> {
+    this.url = `${environment.currencyAPI}/latest?base=${baseName}`;
 
-    return this.http.get<any>(this.url)
+    return this.http.get<LatestRates>(this.url)
       .pipe(
         switchMap((result: any) => {
           this.setRateSelection(result);
           return result ? of(result.rates) : from(this.storageSvc.getLocalData(this.url));
         }),
         tap(async (rates) => {
-          this.rates = { ...rates };
-          this._currenciesSource.next(rates);
-          await this.storageSvc.setLocalData(this.url, rates);
-          await this.getRateSelection();
-
+          this.rates = rates;
+          this.getRateSelection();
+          this.setRatesState();
         }),
         catchError(err => throwError(err))
       );
   }
 
-  public async addFromCurrentRates(selectedRate) {
+  public addFromCurrentRates(selectedRate): void {
+    delete this.rates[selectedRate.key];
+    this.setRatesState();
+  }
+
+  public removeFromCurrentRates(selectedRate): void {
+    this.rates[selectedRate.key] = selectedRate.value;
+    this.setRatesState();
+  }
+
+  public async setRatesState() {
     try {
-      delete this.rates[selectedRate.key];
       await this.storageSvc.setLocalData(this.url, this.rates);
       this._currenciesSource.next({ ...this.rates });
     } catch (error) {
@@ -61,22 +70,11 @@ export class CurrencyApiService {
     }
   }
 
-  public async removeFromCurrentRates(selectedRate) {
-    try {
-      this.rates[selectedRate.key] = selectedRate.value;
-      await this.storageSvc.setLocalData(this.url, this.rates);
-      this._currenciesSource.next({ ...this.rates });
-    } catch (error) {
-      console.log('error: ', error);
-    }
-  }
-
-  public getRangeDate({ base, compareWith, startDate, endDate }) {
-    let url = `https://api.apilayer.com/fixer/timeseries?base=${base}&symbols=${compareWith}&start_date=${startDate}&end_date=${endDate}`;
-    return this.http.get<any>(url)
+  public getRangeDate({ base, compareWith, startDate, endDate }): Observable<TimeSeries> {
+    let url = `${environment.currencyAPI}/timeseries?base=${base}&symbols=${compareWith}&start_date=${startDate}&end_date=${endDate}`;
+    return this.http.get<TimeSeries>(url)
       .pipe(
         switchMap((result: any) => {
-          console.log('result', result);
           return result ? of(result.rates) : from(this.storageSvc.getLocalData(url));
         }),
         tap(async (rates) => {
@@ -86,12 +84,12 @@ export class CurrencyApiService {
       );
   }
 
-  public changeFavorite(faveRates) {
+  public changeFavorite(faveRates): void {
     this.faveRates = faveRates;
     this._faveSource.next(faveRates);
   }
 
-  public async updateFavorite() {
+  public async updateFavorite(): Promise<void> {
     const faveKeys = Object.keys(this.faveRates);
     const mappedFaveRates = {};
     faveKeys.forEach(key => {
@@ -99,10 +97,10 @@ export class CurrencyApiService {
     });
     this.updateCurrentRatesWithFavorites();
     this._faveSource.next(mappedFaveRates);
-    await this.storageSvc.setLocalData('favorites', mappedFaveRates);
+    await this.storageSvc.setLocalData(Keys.FAVORITES, mappedFaveRates);
   }
 
-  public updateCurrentRatesWithFavorites() {
+  public updateCurrentRatesWithFavorites(): void {
     const faveKeys = Object.keys(this.faveRates);
     const baseOpt = { ...this.rates };
     for (let key in baseOpt) {
@@ -115,7 +113,7 @@ export class CurrencyApiService {
   }
 
   public getFavourites(): Observable<any> {
-    return from(this.storageSvc.getLocalData('favorites'))
+    return from(this.storageSvc.getLocalData(Keys.FAVORITES))
       .pipe(
         mergeMap((localBookmark) => {
           this.faveRates = { ...localBookmark };
@@ -126,7 +124,7 @@ export class CurrencyApiService {
   }
 
   public getBaseCurrency() {
-    return from(this.storageSvc.getLocalData('base'))
+    return from(this.storageSvc.getLocalData(Keys.BASE))
       .pipe(
         switchMap((base) => {
           this.base = (base) ? base : 'USD';
@@ -139,17 +137,17 @@ export class CurrencyApiService {
   public async setBaseCurrency(base: string) {
     this.base = base;
     this._baseSource.next(base);
-    await this.storageSvc.setLocalData('base', base);
+    await this.storageSvc.setLocalData(Keys.BASE, base);
   }
 
   private async setRateSelection(result) {
     if (!result) return;
     this._baseSelections.next(result.rates);
-    await this.storageSvc.setLocalData('rate-selection', result.rates);
+    await this.storageSvc.setLocalData(Keys.RATE_SELECT, result.rates);
   }
 
-  private async getRateSelection() {
-    const rateSelection = await this.storageSvc.getLocalData('rate-selection');
+  private async getRateSelection(): Promise<void> {
+    const rateSelection = await this.storageSvc.getLocalData(Keys.RATE_SELECT);
     this._baseSelections.next(rateSelection);
   }
 

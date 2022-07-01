@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CurrencyApiService } from '../shared/services/currency-api.service';
 
