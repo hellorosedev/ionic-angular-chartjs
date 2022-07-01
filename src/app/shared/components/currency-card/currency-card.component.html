@@ -1,0 +1,19 @@
+<ion-card>
+    <ion-row class="ion-justify-content-between ion-align-items-center">
+      <ion-col 
+          [routerLink]="['/currency', currency.key]" 
+          [queryParams]="{base: base, rate: currency.value}" 
+          class="ion-padding">
+        <ion-card-title >{{currency?.key}}</ion-card-title>
+      </ion-col>
+      <ion-col class="ion-text-center">
+        <ion-card-subtitle class="currency-rate-today">{{currency?.value}}</ion-card-subtitle>
+      </ion-col>
+      <ion-col class="ion-justify-content-end ion-text-end">
+        <ion-button (click)="onBookmark(currency)" [color]="type === 'favorite' ? 'secondary': 'tertiary'">
+          <ion-icon *ngIf="type === 'favorite'"  name="remove-circle-outline"></ion-icon>
+          <ion-icon *ngIf="type === 'current'"  name="bookmark-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+</ion-card>

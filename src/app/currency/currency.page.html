@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{compareWith}} - {{baseCurrency}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="ion-padding">
+    <ion-item lines="none">
+      <ion-label class="ion-text-center">
+        <p>Currency</p>
+        <strong class="main-currency">{{compareWith}}</strong>
+      </ion-label>
+      <ion-label class="ion-text-center">
+        <p>Rate</p>
+        <strong>{{rateCompared}}</strong>
+      </ion-label>
+      <ion-label class="ion-text-center">
+        <p>Base</p>
+        <strong *ngIf="baseCurrency">{{baseCurrency}}</strong>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+  <ion-card>
+    <ion-card-header color="secondary">
+      <ion-label>Historical Rate Date</ion-label>
+    </ion-card-header>
+    <ion-item>
+      <ion-label>Start Date</ion-label>
+      <ion-datetime 
+        [value]="startDate"
+        [(ngModel)]="startDate" 
+        [max]="endDate"
+        presentation="date"
+        (ionChange)="getChangeDate()"
+        displayFormat="YYYY-MM-DD">
+      </ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>End Date</ion-label>
+      <ion-datetime 
+      [value]="endDate"
+      [min]="startDate"
+      [(ngModel)]="endDate"
+      presentation="date"
+      (ionChange)="getChangeDate()"
+      displayFormat="YYYY-MM-DD">
+    </ion-datetime>
+    </ion-item>
+  </ion-card>
+  <app-graph *ngIf="rate$ | async as rateList; else noRateRange" [rates]="rateList"></app-graph>
+  <ng-template #noRateRange>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none" color="warning" class="ion-padding">
+            <ion-icon name="alert" slot="start"></ion-icon>
+            <ion-text>Select Start and End Date to show the historical graph</ion-text>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
+  <app-loading [hasLoading]="isLoading"></app-loading>
+</ion-content>

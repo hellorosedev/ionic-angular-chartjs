@@ -1,0 +1,19 @@
+<ion-card>
+  <ion-card-content>
+    <ion-item>
+      <ion-label position="float">Select Base</ion-label>
+      <ion-select [value]="baseCurrency" (ionChange)="selectRate($event.target)">
+        <ng-container>
+          <ion-select-option 
+            *ngFor="let rate of baseOpt | keyvalue"
+            [value]="rate.key">
+              {{rate.key}}
+          </ion-select-option>
+        </ng-container>
+        <ion-label>Value</ion-label>
+      </ion-select>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+
+

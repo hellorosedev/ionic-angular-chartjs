@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Currency
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="{opt: baseOption$ | async, mainBase: baseCurrency$ | async } as baseData">
+  <ng-container>
+    <app-currency-select 
+      *ngIf="baseData.mainBase"
+      [baseCurrency]="baseData.mainBase" 
+      [baseOpt]="baseData.opt">
+  </app-currency-select>
+  </ng-container>
+  <ion-item-group *ngIf="favorite$ | async as favorites">
+    <ion-item-divider *ngIf="hasProperties(favorites)" color="secondary">
+      <ion-label>Favourites</ion-label>
+    </ion-item-divider>
+    <ng-container *ngFor="let favorite of favorites | keyvalue">
+      <app-currency-card [type]="'favorite'" [currency]="favorite" [base]="baseData.mainBase"></app-currency-card>
+    </ng-container>
+  </ion-item-group>
+  <ion-item-group *ngIf="currencies$ | async as currencyObject">
+    <ion-item-divider color="tertiary">
+      <ion-label>Current Rates</ion-label>
+    </ion-item-divider>
+      <ng-container *ngFor="let currency of currencyObject | keyvalue">
+        <app-currency-card [currency]="currency" [base]="baseData.mainBase"></app-currency-card>
+      </ng-container> 
+  </ion-item-group>
+
+</ion-content>
