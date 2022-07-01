@@ -1,7 +1,7 @@
 <ion-card>
   <ion-card-content>
     <ion-item>
-      <ion-label position="float">Select Base</ion-label>
+      <ion-label position="float">Select Base ({{baseCurrency}})</ion-label>
       <ion-select [value]="baseCurrency" (ionChange)="selectRate($event.target)">
         <ng-container>
           <ion-select-option 
