@@ -44,10 +44,7 @@ export class CurrencyPage implements OnInit {
     const changeEndDate = this.endDate;
     this.endDate = changeEndDate?.split('T')[0];
 
-    if (!this.startDate || !this.endDate) {
-
-      return this.controllerSvc.presentAlert('Enter correct Start and End Date value');
-    }
+    if (!this.startDate || !this.endDate) return;
     this.isLoading = true;
     this.getCurrencyRangeValue();
   }
