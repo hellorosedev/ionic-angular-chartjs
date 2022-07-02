@@ -1,9 +1,7 @@
-import { ControllerService } from './../shared/services/controller.service';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CurrencyApiService } from '../shared/services/currency-api.service';
-
 import { map, tap } from 'rxjs/operators';
 
 @Component({
@@ -12,18 +10,19 @@ import { map, tap } from 'rxjs/operators';
   styleUrls: ['./currency.page.scss'],
 })
 export class CurrencyPage implements OnInit {
-  public rate$: Observable<any>;
   public compareWith: string;
   public baseCurrency: string;
   public rateCompared: string;
-  public startDate: any;
-  public endDate: any;
+  public startDate: string;
+  public endDate: string;
   public isLoading: boolean = false;
+  public blockMessage = "Select Start and End Date to show the historical graph";
+  public rate$: Observable<any>;
+  public rangeTitle = " Historical Rate Date";
 
   constructor (
     private activateRoute: ActivatedRoute,
     private currencySvc: CurrencyApiService,
-    private controllerSvc: ControllerService
   ) { }
 
   ngOnInit() {
@@ -34,22 +33,18 @@ export class CurrencyPage implements OnInit {
     });
   }
 
-  public getChangeDate() {
-    if (this.startDate > this.endDate) {
-      return this.controllerSvc.presentAlert('Start date should NOT exceed with End date value');
-    }
-    const changeStartDate = this.startDate;
-    this.startDate = changeStartDate?.split('T')[0];
+  public getStartDate(event) {
+    this.startDate = event;
+    this.getCurrencyRangeValue();
+  }
 
-    const changeEndDate = this.endDate;
-    this.endDate = changeEndDate?.split('T')[0];
-
-    if (!this.startDate || !this.endDate) return;
-    this.isLoading = true;
+  public getEndDate(event) {
+    this.endDate = event;
     this.getCurrencyRangeValue();
   }
 
   public getCurrencyRangeValue(): void {
+    this.isLoading = true;
     const selectedCurrency = {
       base: this.baseCurrency,
       compareWith: this.compareWith,
@@ -66,5 +61,4 @@ export class CurrencyPage implements OnInit {
         tap(() => this.isLoading = false)
       );
   }
-
 }

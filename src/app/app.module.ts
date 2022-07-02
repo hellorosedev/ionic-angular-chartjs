@@ -20,16 +20,16 @@ import { AuthInterceptorService } from './shared/interceptors/auth-interceptor.s
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-     {
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: CacheInterceptorService,
       multi: true
-    }, 
-     {
+    },
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true
-    } 
+    }
   ],
   bootstrap: [AppComponent],
 })

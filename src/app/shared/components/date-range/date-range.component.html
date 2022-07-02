@@ -1,0 +1,28 @@
+<ion-card>
+  <ion-card-header color="secondary">
+    <ion-label>{{title}}</ion-label>
+  </ion-card-header>
+  <form [formGroup]="dateForm">
+    <ion-item [style.color]="
+        dateForm.get('startDate').dirty &&
+        dateForm.invalid ? 'red' : 'rgba(75,192,192,1)'">
+      <ion-label>Start Date</ion-label>
+       <ion-datetime 
+        formControlName="startDate"
+        presentation="date"
+        displayFormat="YYYY-MM-DD">
+      </ion-datetime>
+    </ion-item>
+    <ion-item 
+      [style.color]="
+        dateForm.get('endDate').dirty  &&
+        dateForm.invalid ? 'red' : 'rgba(75,192,192,1)'">
+      <ion-label>End Date</ion-label>
+      <ion-datetime 
+        formControlName="endDate" 
+        presentation="date"
+        displayFormat="YYYY-MM-DD">
+    </ion-datetime>
+    </ion-item>
+  </form>
+</ion-card>

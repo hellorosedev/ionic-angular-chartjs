@@ -1,0 +1,16 @@
+<ion-card class="ion-padding">
+  <ion-item lines="none">
+    <ion-label class="ion-text-center">
+      <p>Currency</p>
+      <strong class="main-currency">{{compareWith}}</strong>
+    </ion-label>
+    <ion-label class="ion-text-center">
+      <p>Rate</p>
+      <strong>{{rateCompared}}</strong>
+    </ion-label>
+    <ion-label class="ion-text-center">
+      <p>Base</p>
+      <strong *ngIf="baseCurrency">{{baseCurrency}}</strong>
+    </ion-label>
+  </ion-item>
+</ion-card>
