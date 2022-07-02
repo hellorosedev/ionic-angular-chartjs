@@ -9,7 +9,7 @@
 
 ### Installation instruction
 
-1. https://github.com/simplifyjs/ionic-angular-chartjs.git
+1. `git clone https://github.com/simplifyjs/ionic-angular-chartjs.git`
 2. In your terminal, run `npm install`
 3. Run `ionic serve` 
 
