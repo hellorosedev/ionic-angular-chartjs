@@ -1,4 +1,4 @@
-# Angular CRUD
+# Angular Ionic ChartJS
 
 ### Dependent 
 - Ionic 5
