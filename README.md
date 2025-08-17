@@ -18,4 +18,4 @@
 
 
 ## Author
-    - Ann G. ⊂(・﹏・⊂) Simplify JS
+    - RoseCode ⊂(・﹏・⊂)
